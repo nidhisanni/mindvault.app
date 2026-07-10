@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSupabase } from "@/lib/supabase";
 import { useDocument } from "@/context/DocumentContext";
 import { deleteFile } from "@/services/storage";
+import { useSearch } from "@/context/SearchContext";
 
 type Document = {
   id: string;
@@ -15,6 +16,7 @@ type Document = {
 export default function DocumentList() {
   const supabase = useSupabase();
   const { selectedDocument, setSelectedDocument } = useDocument();
+  const { search } = useSearch();
   const [documents, setDocuments] = useState<Document[]>([]);
 
   async function handleDelete(id: string, storagePath: string) {
@@ -62,15 +64,20 @@ export default function DocumentList() {
     fetchDocuments();
   }, [supabase]);
   
+  const filteredDocuments = documents.filter((doc) =>
+    doc.file_name.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-bold mb-4">Your Documents</h2>
 
-      {documents.length === 0 ? (
-        <p>No documents uploaded yet.</p>
+      {filteredDocuments.length === 0 ? (
+        <p>{search
+          ? "No matching documents found."
+          : "No documents uploaded yet."}</p>
       ) : (
         <div className="space-y-3">
-          {documents.map((doc) => (
+          {filteredDocuments.map((doc) => (
             <div
             key={doc.id}
             onClick={() => setSelectedDocument(doc.id)}
@@ -95,7 +102,7 @@ export default function DocumentList() {
                   }}
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                 >
-                  Delete
+                  🗑 Delete
                 </button>
               </div>
             </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { DocumentProvider } from "@/context/DocumentContext";
 import "./globals.css";
+import { SearchProvider } from "@/context/SearchContext";
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -17,10 +18,12 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <DocumentProvider>
-            {children}
-          </DocumentProvider>
-        </body>
+          <SearchProvider>
+            <DocumentProvider>
+              {children}
+            </DocumentProvider>
+          </SearchProvider>
+         </body>
       </html>
     </ClerkProvider>
   );

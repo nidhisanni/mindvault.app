@@ -32,6 +32,7 @@ export default function ChatBox() {
       const data = await res.json();
   
       setReply(data.reply);
+      setMessage("");
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");
@@ -41,7 +42,15 @@ export default function ChatBox() {
   }
   return (
     <div className="mt-10 bg-white p-6 rounded-xl shadow">
-      <h2 className="text-xl font-bold mb-4">Ask AI</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold">Ask AI</h2>
+
+        {selectedDocument && (
+          <span className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full">
+            Document Selected
+          </span>
+        )}
+      </div>
 
       <input
         className="w-full border rounded-lg p-3"
@@ -60,7 +69,9 @@ export default function ChatBox() {
       {reply && (
         <div className="mt-6 border-t pt-4">
           <p className="font-semibold">AI Reply</p>
-          <p>{reply}</p>
+          <div className="whitespace-pre-wrap leading-7 text-gray-700">
+            {reply}
+          </div>
         </div>
       )}
     </div>
