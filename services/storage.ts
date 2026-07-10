@@ -19,3 +19,16 @@ export async function uploadFile(
     path: data.path,
   };
 }
+
+export async function deleteFile(
+  supabase: SupabaseClient,
+  storagePath: string
+) {
+  const { error } = await supabase.storage
+    .from("documents")
+    .remove([storagePath]);
+
+  if (error) {
+    throw error;
+  }
+}

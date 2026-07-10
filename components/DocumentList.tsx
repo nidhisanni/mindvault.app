@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { useSupabase } from "@/lib/supabase";
 import { useDocument } from "@/context/DocumentContext";
+import { deleteFile } from "@/services/storage";
 
 type Document = {
   id: string;
   file_name: string;
+  storage_path: string;
   created_at: string;
 };
 
@@ -15,6 +17,33 @@ export default function DocumentList() {
   const { selectedDocument, setSelectedDocument } = useDocument();
   const [documents, setDocuments] = useState<Document[]>([]);
 
+  async function handleDelete(id: string, storagePath: string) {
+    console.log("DELETE CLICKED");
+  
+    try {
+      console.log("Deleting storage...");
+      await deleteFile(supabase, storagePath);
+      console.log("Storage deleted");
+  
+      console.log("Deleting database row...");
+      const { error } = await supabase
+        .from("documents")
+        .delete()
+        .eq("id", id);
+  
+      console.log("Database response:", error);
+  
+      if (error) throw error;
+  
+      console.log("Updating UI...");
+      setDocuments((prev) => prev.filter((doc) => doc.id !== id));
+  
+      console.log("Done!");
+    } catch (error) {
+      console.error("DELETE ERROR:", error);
+      alert("Failed to delete document.");
+    }
+  }
   useEffect(() => {
     async function fetchDocuments() {
       const { data, error } = await supabase
@@ -32,7 +61,7 @@ export default function DocumentList() {
 
     fetchDocuments();
   }, [supabase]);
-
+  
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-bold mb-4">Your Documents</h2>
@@ -51,10 +80,24 @@ export default function DocumentList() {
                 : "bg-white"
             }`}
           >
-              <p className="font-semibold">{doc.file_name}</p>
-              <p className="text-sm text-gray-500">
-                {new Date(doc.created_at).toLocaleString()}
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold">{doc.file_name}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(doc.created_at).toLocaleString()}
+                  </p>
+                </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(doc.id, doc.storage_path);
+                  }}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

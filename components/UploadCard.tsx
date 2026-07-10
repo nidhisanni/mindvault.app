@@ -7,6 +7,7 @@ import { uploadDocument } from "@/services/document";
 
 export default function UploadCard() {
   const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const { user } = useUser();
 
@@ -14,6 +15,7 @@ export default function UploadCard() {
 
   const handleUpload = async () => {
     if (!file || !user) return;
+    setUploading(true);
 
     try {
       await uploadDocument({
@@ -23,6 +25,7 @@ export default function UploadCard() {
       });
 
       alert("File uploaded successfully!");
+      setUploading(false);
     } catch (error: any) {
         console.error(error);
         alert(error?.message || String(error));
@@ -48,12 +51,13 @@ export default function UploadCard() {
 
       {file && <p className="mt-4">{file.name}</p>}
 
-      <button
+    <button
         onClick={handleUpload}
-        className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800"
-      >
-        Upload File
-      </button>
+        disabled={uploading}
+        className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 disabled:bg-gray-500"
+    >
+        {uploading ? "Uploading..." : "Upload File"}
+    </button>
     </div>
   );
 }
