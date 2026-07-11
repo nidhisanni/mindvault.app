@@ -1,7 +1,24 @@
+import { UserButton } from "@clerk/nextjs";
+
 export default function Navbar() {
-    return (
-      <nav className="flex items-center justify-between p-6 border-b">
-        <h1 className="text-2xl font-bold">🧠 Second Brain</h1>
-      </nav>
-    );
-  }
+  return (
+    <nav className="sticky top-0 z-50 h-[68px] border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sm font-semibold text-sky-700 shadow-sm">
+            MV
+          </div>
+
+          <div className="leading-tight">
+            <p className="text-base font-semibold text-slate-950">MindVault</p>
+            <p className="text-xs text-slate-500">AI document workspace</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <UserButton appearance={{ elements: { avatarBox: "h-10 w-10" } }} />
+        </div>
+      </div>
+    </nav>
+  );
+}

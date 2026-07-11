@@ -5,7 +5,7 @@ import "./globals.css";
 import { SearchProvider } from "@/context/SearchContext";
 
 export const metadata: Metadata = {
-  title: "Second Brain",
+  title: "MindVault",
   description: "AI-powered memory search",
 };
 
