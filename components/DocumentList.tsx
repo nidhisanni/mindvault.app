@@ -5,6 +5,7 @@ import { useSupabase } from "@/lib/supabase";
 import { useDocument } from "@/context/DocumentContext";
 import { deleteFile } from "@/services/storage";
 import { useSearch } from "@/context/SearchContext";
+import { useUser } from "@clerk/nextjs";
 
 type Document = {
   id: string;
@@ -25,6 +26,7 @@ function getDocumentTypeLabel(fileName: string) {
 
 export default function DocumentList() {
   const supabase = useSupabase();
+  const { user } = useUser();
   const { selectedDocument, setSelectedDocument } = useDocument();
   const { search } = useSearch();
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -57,10 +59,12 @@ export default function DocumentList() {
     }
   }
   useEffect(() => {
+    if (!user) return;
     async function fetchDocuments() {
       const { data, error } = await supabase
         .from("documents")
         .select("*")
+        .eq("user_id", user?.id)
         .order("created_at", { ascending: false });
 
       if (error) {
