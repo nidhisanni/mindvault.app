@@ -333,7 +333,7 @@ Aspiring Software Development Engineer passionate about building scalable AI-pow
 
 # 📂 Repository
 
-💻 https://github.com/nidhisanni/second-brain
+💻 https://github.com/nidhisanni/mindvault-app
 
 ---
 
