@@ -1,10 +1,16 @@
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import SearchBar from "@/components/SearchBar";
 import UploadCard from "@/components/UploadCard";
 import DocumentList from "@/components/DocumentList";
 import ChatBox from "@/components/ChatBox";
+export default async function Home() {
+  const { userId } = await auth();
 
-export default function Home() {
+  if (!userId) {
+    redirect("/sign-in");
+  }
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
